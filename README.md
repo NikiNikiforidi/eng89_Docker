@@ -49,8 +49,27 @@
 - Companoes such as JPMorgan, ThoughtWorksING, Paypal, ADP, Spotify and more
 <br> </br>
 ### What is Micro-services architecture
+- Microservice architecture, is an architectural style that structures an application as a collection of services that are:
 
+	- Highly maintainable and testable
+	- Loosely coupled
+	- Independently deployable
+	- Organized around business capabilities
+	- Ownedby a small team
+<br> </br>
+- It is essentially like using a Lego block to build something
+- The microservice architecture enables the rapid, frequent and reliable delivery of large, complex applications. It also enables an organization to evolve its technology stack.
+<br> </br>
+![download](https://user-images.githubusercontent.com/86292184/129904537-e4a2d130-bc4b-441c-bee6-8ef5996d49b3.png)
+<br> </br>
+### Micro-services architecture vs Monolith
+- The monolithic architecture is considered to be a traditional way of building applications. 
+	- A monolithic application is built as a single and indivisible unit. Usually, such a solution comprises a client-side user interface, a server side-application, and a database.
+- While a monolithic application is a single unified unit, a microservices architecture breaks it down into a collection of smaller independent units. 
+	- These units carry out every application process as a separate service. So all the services have their own logic and the database as well as perform the specific functions.
+	<br> </br>
+![download](https://user-images.githubusercontent.com/86292184/129904972-af9a1379-cd80-4420-8390-88a62d2ff8fd.jpg)
+<br> </br>
 
-
-### Micro-services architecture vs Monolith and use cases 
 ### Is Micro-services architecture always useful?
+- According to IDC, by 2022, 90% of all apps will feature microservices architectures that improve the ability to design, debug, update, and leverage third-party code
