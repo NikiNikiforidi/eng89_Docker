@@ -73,3 +73,64 @@
 
 ### Is Micro-services architecture always useful?
 - According to IDC, by 2022, 90% of all apps will feature microservices architectures that improve the ability to design, debug, update, and leverage third-party code
+- ---------------------------------------
+## Docker commands
+- Runs image, Go to localhost:3000 in your browser
+`docker run -d -p 4000:4000 docs/docker.github.io`
+- Run nginx, check in browser: localhost
+`docker run -d -p 80:80 nginx`
+- Check running containers 
+`docker ps` `docker ps -a`
+- To enter container
+`docker exec -t CONTAINER_ID sh`
+` dockor
+- To stop/ start the container
+`docker stop CONTAINER_ID` `docker start CONTAINER_ID`
+- Destroy container
+`docker rm CONTAINER_ID -f`
+- list images
+`docker images`
+- shows image history
+`docker history IMAGE_NAME`
+- delete image
+`docker rmi IMAGE_NAME`
+<br> <br/>
+- -------------------------------
+### HTML Task
+
+
+- **Create basic .html file** 
+- Create `index.txt` file and create simple html script
+```
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>My First Heading</h1>
+
+<p>My first paragraph.</p>
+
+</body>
+</html>
+
+```
+- Save and change file type from `.txt` to `.html`
+<br> </br>
+- **Copy html file from local host to container**
+- To copy, naviagte to local host folder that contains the html file
+- Run `docker cp /LOCAL-HOST-FILE LOCATION/index.html CONTAINER_ID:/usr/share/nginx/html
+- If it returns an error, restart your terminal and try again
+<br> </br>
+- **Run container**
+`docker run -d -p 80:80 nginx`
+- Check container info `docker ps -a`
+- Run `alias docker="winpty docker"`
+- Open container `docker exec -it CONTAINER_ID sh`
+- Go to directory `cd /usr/share/nginx/html`
+<br> </br>
+- **Check if copy command is successful** 
+Run `pwd` to check if you're in the correct location
+- Check files, run `ls -a`
+- Run `apt update` then `apt install nano`
+- Once installed, run `nano index.html` 
+- To exit container, run `exit` duh
