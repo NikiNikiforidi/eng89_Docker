@@ -136,47 +136,45 @@ Run `pwd` to check if you're in the correct location
 - To exit container, run `exit` duh
 <br> </br>
 - ----------------------------------------
-### Create Image to automate task
+### Automating task using Dockerfile
 - Create docker file:  `nano Dockerfile` 
 - **D mustbe captial**
-- Steps:
-- Use the official nginx image
-	- `FROM nginx`
-- Optional, labe with your name
-	- `LABEL MAINTAINER = nnikiforidi@spartaglobal.com`
-- Copy the data as our index.html
-	- `COPY index.html /usr/share/nginx/html/`
-- Add the port
-	- `EXPOSE 80`
-	- `CMD ["nginx", "-g", "daemon off;"] `
+- Inside file:
+	- Use the official nginx image
+		- `FROM nginx`
+	- Optional, labe with your name
+		- `LABEL MAINTAINER = nnikiforidi@spartaglobal.com`
+	- Copy the data as our index.html
+		- `COPY index.html /usr/share/nginx/html/`
+	- Add the port
+		- `EXPOSE 80`
+		- `CMD ["nginx", "-g", "daemon off;"] `
+- Save and exit file
 <br> </br>
+
 
 - To build image  
 	- `docker build -t DOCKER_ID/IMAGE_NAME .`
 
-- To check if you have the image:
-	- `docker images`
+- You should be able to see you .HTML on`localhost:50`
 
-- To create container from image:
-	 - `docker run -d -p 50:80 DOCKER_ID/IMAGE_NAME`
-
-
-- You should be able to see this on port loalhost:50
-
-- to go inside container
-
+<br> </br>
+------------------------------------------
+### Push and Pull from Docker
 - To push image to docker:
-	- `docker push nikinikiforidi/eng89_auto_nginx
-`
-
-- Delete image `doc`
-
-- `docker images` Shows the images
-
-- `docker ps ` Shows the containers
-
-- `docker rmi id -f` delete image
-- `docker rm id -f` delete container
+	- `docker push DOCTER_ID/REPO_NAME`
 
 - To pull container from docker repo: 
-	- `docker pull ID/NAME`
+	- `docker pull DOCTER_ID/REPO_NAME`
+
+<br> </br>
+- -------------------------------------
+### View and delete images and containers
+- Show the images
+	- `docker images` 
+- Delete images
+	- `docker rmi id -f` 
+- Show container
+	- `docker ps `
+- Delete container
+	- `docker rm id -f` 
