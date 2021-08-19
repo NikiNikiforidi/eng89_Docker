@@ -155,6 +155,8 @@ Run `pwd` to check if you're in the correct location
 
 - To build image  
 	- `docker build -t DOCKER_ID/IMAGE_NAME .`
+- To run image:
+	- docker 
 
 - You should be able to see you .HTML on`localhost:50`
 
@@ -178,3 +180,115 @@ Run `pwd` to check if you're in the correct location
 	- `docker ps `
 - Delete container
 	- `docker rm id -f` 
+<br> </br>
+- ---------------------------------------------
+### Docker volume
+- To create a volume 
+	- `docker run -d -v LOCAL_PATH_.HTML:/usr/share/nginx/html -p 5000:80 DOCKER_ID/REPO_NAME`
+
+	- example `docker run -d -v /c/Users/Niki/eng89_Docker:/usr/share/nginx/html/ -p 92:80 nikinikiforidi/eng89_auto_nginx
+`
+<br> </br>
+
+- Create a volume
+	- `docker volume create --name GIVE_NAME`
+- To get more infor about volume
+	- `docker volume inspect NAME`
+- ----------------------------------------
+### Changes on local host
+- If you change the html file from your local host you will have to follow these steps to see the update
+
+- Create new image
+	- `docker build -t DOCKER_ID/NWE_NAME .`
+	- Example: 
+	- `docker build -t nikinikiforidi/eng89_auto_nginx:v1 .`
+- Build new image with volume
+	- `docker run -d  -v PWD_PATH:/usr/share/nginx/html/ -9 port DOCKER_ID/NEW_NAME`
+	- Example:
+	- `docker run -d -v /c/Users/Niki/eng89_Docker:/usr/share/nginx/html/ -p 70:80 nikinikiforidi/eng89_auto_nginx:v1
+`
+
+
+- ----------------------------------------
+### Launch app
+- Copy over app folder and enter it
+
+- Create new `Dockerfile` file in app folder
+
+```
+# Use node official image for this dockerfile
+FROM node
+
+# location destination inside the container
+WORKDIR /usr/src/app
+
+# copy everything
+COPY ["package.json", "package-lock.json*", "./"]
+
+# another way
+COPY . .
+
+RUN npm install -g npm@7.20.6
+
+RUN node seeds/seed.js
+
+EXPOSE 3000
+
+CMD ["node", "app.js"]
+
+
+```
+- Build
+	- `docker build -t nikinikiforidi/eng89_node_app .
+`
+
+- Run app on port 3000
+	- ` docker run -d -p 3000:3000 nikinikiforidi/eng89_node_app
+`
+- Close all containers that are using port 80
+- To get "reverse proxy"
+	- `docker run -d -p 80:3000 nikinikiforidi/eng89_node_app
+`
+- Go to browser and open localhost
+
+- -----------------------------------------
+### running ITproject app
+
+- Create requirements.txt file and add
+```
+flask
+flask_wtf
+passlib
+requests
+pandas==1.3.2
+flask_table
+list_function
+lxml
+```
+<br> </br>
+
+- Create a new Dockerfile and add
+```
+FROM python:3.8
+
+WORKDIR	usr/src/app
+
+COPY requirements.txt requirements.txt
+
+COPY . .
+
+RUN pip3 install -r requirements.txt
+
+
+EXPOSE 5000
+
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+
+``` 
+- Then run these commands
+
+`docker build -t nikinikiforidi/it_app:v3 .`
+
+`docker run -d -p 4000:5000 nikinikiforidi/it_app:v3`
+
+`docker push nikinikiforidi/it_app:v3`
