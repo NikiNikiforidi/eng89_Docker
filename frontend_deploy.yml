@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: niki
   labels:
     app.kubernetes.io/name: guestbook
     app.kubernetes.io/component: frontend

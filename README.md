@@ -333,3 +333,310 @@ CMD ["node", "app.js"]
 
 ```
 <br> </br>
+- ----------------------------------------------
+# Kubenetes
+
+![overview](https://user-images.githubusercontent.com/86292184/130643874-5031455d-a94e-4e81-bb0d-25ab8babfb53.png)
+
+- Kubernetes is an open-source container-orchestration system for automating computer application deployment, scaling, and management
+
+<br> </br>
+- ------------------------------
+![Kubernetes_20architecture_20diagram](https://user-images.githubusercontent.com/86292184/130644351-96163369-1cf8-4903-b54e-cf8193f8ffbb.png)
+
+- PODS: 
+  - A Kubernetes pod is a group of containers, and is the smallest unit that Kubernetes administers. Pods have a single IP address that is applied to every container within the pod.
+- Deployments: 
+  - Deployments describe the number of desired identical pod replicas to run and the preferred update strategy used when updating the deployment.
+- Services:
+  - A service is an abstraction over the pods. A service exposes a single machine name or IP address mapped to pods whose underlying names and numbers are unreliable. A service ensures that, to the outside network, everything appears to be unchanged.
+  - Nodes:
+     - A Kubernetes node manages and runs pods; it’s the machine (whether virtualized or physical) that performs the given work.
+
+<br> </br>
+
+
+![9ap3zyn](https://user-images.githubusercontent.com/86292184/130646431-f594992e-af32-4aef-a8e5-6cff82563983.jpg)
+
+
+- Object
+  - A Kubernetes object is a "record of intent" (once you create the object), the Kubernetes system will constantly work to ensure that object exists. By creating an object, you're effectively telling the Kubernetes system what you want your cluster's workload to look like; this is your cluster's desired state.
+  <br> </br>
+
+  - When you create an object in Kubernetes, you must provide the object spec that describes its desired state, as well as some basic information about the object (such as a name). 
+  - Most often, you provide the information to kubectl in a .yaml file. kubectl converts the information to JSON when making the API request.
+<br> </br>
+- The port range for NodePort is 30000-32767
+<br> </br>
+- K8 self-heal
+  - One of the great benefits of Kubernetes is its self-healing ability. If a containerized app or an application component goes down, Kubernetes will instantly redeploy it, matching the so-called desired state.
+- -------------------------
+### Nginx setup
+- Create a yml deployment file and add:
+```
+# K8s works with API versions to declare the resources
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+
+spec:
+  selector:
+    matchLabels:
+      app: nginx # look for this lable to match with k8s service
+
+  replicas: 2
+
+# template to use it's label for k8s to launch in the browser
+  template:
+    metadata:
+      labels:
+        app: nginx
+
+# define the container specs
+    spec:
+      containers:
+      - name: nginx
+        image: nikinikiforidi/eng89_node_app
+        ports:
+        - containerPort: 80
+
+```
+- To run the yml file:	
+	 - `kubectl apply -f NAME_OF_YOUR_FILE.yml`
+<br> </br>
+- -----------------------------------------
+### nginx service set up
+- create a yml service file and add:
+```
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2021-08-23T11:07:26Z"
+  name: nginx-deployment
+  namespace: default
+  resourceVersion: "40883"
+  uid: 9190ab75-d61c-4ff4-a3d1-0d293fa8d72e
+
+spec: 
+  #clusterIP: 10.96.0.1 
+  #clusterIPs:
+  #-  10.96.0.1 
+  #externalTrafficPolicy: Cluster
+  #ipFamilies:
+  #- IPv4
+  #ipFamilyPolicy: SingleStack
+  ports:
+  - nodePort: 30442
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+      - hostname: localhost
+
+```
+
+- To run the yml file:	
+	 - `kubectl apply -f NAME_OF_YOUR_FILE.yml`
+<br> </br>
+- -------------------------------
+
+### MongoDB deployment setup
+- For mongoDB deployment, create a yml file and add:
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+  labels:
+    app.kubernetes.io/name: mongo
+    app.kubernetes.io/component: backend
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mongo
+      app.kubernetes.io/component: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mongo
+        app.kubernetes.io/component: backend
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:4.2
+        args:
+          - --bind_ip
+          - 0.0.0.0
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 27017
+
+```
+
+- To run the yml file:	
+	 - `kubectl apply -f NAME_OF_YOUR_FILE.yml`
+
+<br> </br>
+- ---------------------------------------
+### MongoDB services setup
+- To deploy the mongoDB service, create another yml file
+```
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  labels:
+    app.kubernetes.io/name: mongo
+    app.kubernetes.io/component: backend
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    app.kubernetes.io/name: mongo
+    app.kubernetes.io/component: backend
+```
+
+
+- To run the yml file:	
+	 - `kubectl apply -f NAME_OF_YOUR_FILE.yml`
+<br> </br>
+- -------------------------------------
+### Guestbook Fronend setup
+
+- The the guestbook frontend deployment, create a yml file and add:
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app.kubernetes.io/name: guestbook
+    app.kubernetes.io/component: frontend
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: guestbook
+      app.kubernetes.io/component: frontend
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: guestbook
+        app.kubernetes.io/component: frontend
+    spec:
+      containers:
+      - name: guestbook
+        image: paulczar/gb-frontend:v5
+        # image: gcr.io/google-samples/gb-frontend:v4
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        ports:
+        - containerPort: 80
+
+```
+- NOTE: Make sure you have no other containers running on port 80
+
+- To run the yml file:	
+	 - `kubectl apply -f NAME_OF_YOUR_FILE.yml`
+
+<br> </br>
+- ---------------------------------
+### Crone jobs
+
+- create a yml file and add
+```
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: eng89
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: eng89
+            image: busybox
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - date; echo thank you for using cronjob
+
+          restartPolicy: OnFailure
+
+
+
+```
+<br> </br>
+```
+ Cron schedule syntax
+      ┌────────────────── timezone (optional)
+      |      ┌───────────── minute (0 - 59)
+      |      │ ┌───────────── hour (0 - 23)
+      |      │ │ ┌───────────── day of the month (1 - 31)
+      |      │ │ │ ┌───────────── month (1 - 12)
+      |      │ │ │ │ ┌───────────── day of the week (0 - 6) (Sunday to Saturday;
+      |      │ │ │ │ │                                   7 is also Sunday on some systems)
+      |      │ │ │ │ │
+      |      │ │ │ │ │
+ CRON_TZ=UTC * * * * *
+```
+
+<br> </br>
+- Create yml job file
+`kubectl apply -f cron-job.yml`
+`kubectl get cronjob``
+`kubectl get job --watch`
+- copy last name and paste on next command:
+`pods=$(kubectl get pods --selector=job-name=eng89-27163575 --output=jsonpath={.items[*].metadata.name})
+kubectl logs $pods`
+
+- Make sure the` name=eng89-27163575` is changed accordingly to the last log
+<br> </br>
+- -----------------------------------------
+### Auto-scalling HPA
+
+```
+  apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+
+metadata:
+  name: sparta-node-app
+  namespace: default
+
+spec:
+  maxReplicas: 9
+  minReplicas: 2
+  # target your node-app-deployment so the 
+  # hpa knows which deployment to scale up on demand, scale down when no longer
+  scaleTargetRef:  
+    apiVersion: app/v1
+    kind: Deployment
+    name: sparta-node-app
+  targetCPUUtilizationPercentage: 50  
+  
+```
+<br> </br>
+- -----------------------------------
