@@ -3,7 +3,7 @@
 # Use the official nginx image
 # Lable it with your name or email
 # Copy the folder/ file from our local host to the container
-# > This is the command : docker cp /LOCAL-HOST-FILE LOCATION/index.html CONTAINER_ID:/usr/share/nginx/html
+# This is the command : docker cp /LOCAL-HOST-FILE LOCATION/index.html CONTAINER_ID:/usr/share/nginx/html
 # Declare to use defualt port 80 for nginx
 # CMD with the final command - as an example, npm start (s sort of command with go into CMD)
 

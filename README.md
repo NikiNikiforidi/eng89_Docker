@@ -286,9 +286,50 @@ CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
 
 ``` 
 - Then run these commands
+- build image
+		- `docker build -t nikinikiforidi/it_app:v3 .`
+		- check with `docker images`
+- Run it
+		-`docker run -d -p 4000:5000 nikinikiforidi/it_app:v3`
+		- check with `docker ps`
 
-`docker build -t nikinikiforidi/it_app:v3 .`
+- Push to docker	
+		- `docker push nikinikiforidi/it_app:v3`
+- ------------------------------------------
+### Docker multi statge build
 
-`docker run -d -p 4000:5000 nikinikiforidi/it_app:v3`
+```
+FROM node AS app
 
-`docker push nikinikiforidi/it_app:v3`
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install -g npm@7.20.6
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["node", "app.js"]
+
+# Let'sbuild a built-stage production ready image
+
+FROM node:alpine
+
+WORKDIR /usr/scr/app
+
+COPY package*.json ./
+
+RUN npm install -g npm@7.20.6
+
+COPY --from=app /usr/src/app /usr/scr/app
+
+EXPOSE 3000
+
+CMD ["node", "app.js"]
+
+
+
+```
+<br> </br>
